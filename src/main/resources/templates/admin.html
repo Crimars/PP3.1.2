@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Page</title>
+</head>
+<body>
+<h1>Welcome, Admin!</h1>
+
+<p>This is the admin section. Only users with role ROLE_ADMIN can see this.</p>
+
+<form th:action="@{/logout}" method="post">
+  <button type="submit">Logout</button>
+</form>
+</body>
+</html>
