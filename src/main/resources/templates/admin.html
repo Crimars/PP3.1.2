@@ -1,16 +1,51 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Page</title>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
 </head>
 <body>
-<h1>Welcome, Admin!</h1>
+<h1>Admin Panel</h1>
+<p>Logged in as: <span sec:authentication="name"></span></p>
 
-<p>This is the admin section. Only users with Role_ADMIN can see this.</p>
-
+<!-- Logout Form -->
 <form th:action="@{/logout}" method="post">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
   <button type="submit">Logout</button>
+</form>
+
+<!-- Users Table -->
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Roles</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.id}"></td>
+    <td th:text="${user.username}"></td>
+    <td>
+      <span th:each="role : ${user.roles}" th:text="${role.name} + ' '"></span>
+    </td>
+    <td>
+      <a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a>
+      <form th:action="@{/admin/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<!-- Add User Form -->
+<h2>Add New User</h2>
+<form th:action="@{/admin/create}" method="post" th:object="${newUser}">
+  <input type="text" th:field="*{username}" placeholder="Username">
+  <input type="password" th:field="*{password}" placeholder="Password">
+  <button type="submit">Add User</button>
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 </form>
 </body>
 </html>
