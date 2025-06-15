@@ -13,7 +13,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // например, ROLE_ADMIN, ROLE_USER
+    private String name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

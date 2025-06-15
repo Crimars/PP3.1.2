@@ -8,7 +8,7 @@
 <body>
 <h1>Welcome, <span th:text="${user.username}"></span>!</h1>
 
-<!-- User Info -->
+
 <h3>Your Information:</h3>
 <p>Username: <span th:text="${user.username}"></span></p>
 <p>Roles:
@@ -21,7 +21,7 @@
     <button type="submit">Logout</button>
 </form>
 
-<!-- Admin Link (visible only for admins) -->
+
 <div sec:authorize="hasRole('ADMIN')">
     <a th:href="@{/admin}">Go to Admin Panel</a>
 </div>

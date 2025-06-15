@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 import java.util.List;
@@ -17,16 +18,20 @@ import java.util.List;
 public class AdminController {
 
     private final UserServiceImpl userServiceImpl;
+    private final RoleService roleService;
+
 
     @Autowired
-    public AdminController(UserServiceImpl userServiceImpl) {
+    public AdminController(UserServiceImpl userServiceImpl, RoleService roleService) {
         this.userServiceImpl = userServiceImpl;
+        this.roleService = roleService;
     }
-
 
     @GetMapping
     public String adminHome(Model model) {
         model.addAttribute("users", userServiceImpl.getAllUsers());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("roles", roleService.getAllRoles());
         return "admin";
     }
 
@@ -47,6 +52,14 @@ public class AdminController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editUserForm(@PathVariable Long id, Model model) {
+        User user = userServiceImpl.findUserById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "edit-user";
     }
 
 
@@ -74,17 +87,25 @@ public class AdminController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@Valid User user, BindingResult result, Model model) {
+    public String updateUser(@ModelAttribute("user") @Valid User user,
+                             BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("roles", roleService.getAllRoles());
+            return "edit-user";
+        }
+        userServiceImpl.updateUser(user);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/create")
+    public String createUser(@ModelAttribute("newUser") @Valid User user,
+                             BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("users", userServiceImpl.getAllUsers());
+            model.addAttribute("roles", roleService.getAllRoles());
             return "admin";
         }
-
-        if (!userServiceImpl.updateUser(user)) {
-            model.addAttribute("error", "Пользователь не найден");
-            return "admin";
-        }
-
-        model.addAttribute("success", "Пользователь успешно обновлён");
-        return "admin";
+        userServiceImpl.saveUser(user);
+        return "redirect:/admin";
     }
 }
