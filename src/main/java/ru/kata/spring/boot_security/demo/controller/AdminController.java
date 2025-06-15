@@ -86,6 +86,7 @@ public class AdminController {
         }
     }
 
+
     @PostMapping("/update")
     public String updateUser(@ModelAttribute("user") @Valid User user,
                              BindingResult result, Model model) {
@@ -108,4 +109,5 @@ public class AdminController {
         userServiceImpl.saveUser(user);
         return "redirect:/admin";
     }
-}
+
+  }
