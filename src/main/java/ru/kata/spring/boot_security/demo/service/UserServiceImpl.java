@@ -38,13 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority(role.getName()))
-                        .collect(Collectors.toList())
-        );
+        return user;
     }
 
     @Override
@@ -89,6 +83,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         return false;
     }
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
     @Override
     public boolean updateUser(User user) {
@@ -105,5 +103,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     return true;
                 })
                 .orElse(false);
+
     }
 }

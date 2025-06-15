@@ -19,9 +19,10 @@ public class WebSecurityConfig {
 
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler,
+                             UserDetailsService userServiceImpl) {
         this.successUserHandler = successUserHandler;
-        this.userDetailsService = userDetailsService;
+        this.userDetailsService = userServiceImpl;
     }
 
 
@@ -35,6 +36,7 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
+                        .loginPage("/login")
                         .successHandler(successUserHandler)
                         .permitAll()
                 )
@@ -42,4 +44,5 @@ public class WebSecurityConfig {
                 .userDetailsService(userDetailsService);
         return http.build();
     }
+
 }

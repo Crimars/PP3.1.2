@@ -25,8 +25,9 @@ public class AdminController {
 
 
     @GetMapping
-    public String adminHome() {
-        return "index";
+    public String adminHome(Model model) {
+        model.addAttribute("users", userServiceImpl.getAllUsers());
+        return "admin";
     }
 
 

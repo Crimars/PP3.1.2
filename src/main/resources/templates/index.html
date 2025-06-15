@@ -30,12 +30,11 @@
 
 <div sec:authorize="!isAuthenticated()" class="auth-links">
     <a th:href="@{/login}">Login</a>
-    <a th:href="@{/register}">Register</a>
-</div>
+  </div>
 
 <div sec:authorize="isAuthenticated()">
     <p>You are logged in as: <span sec:authentication="name"></span></p>
     <a th:href="@{/user}">Go to User Dashboard</a>
 </div>
 </body>
-</html>>
+</html>
